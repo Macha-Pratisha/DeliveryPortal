@@ -1,7 +1,10 @@
 import axios from 'axios';
 
-// Backend URL on Render
-const BASE_URL = "https://everydaynewsbackend.onrender.com/api";
+// Determine backend URL
+const BASE_URL = import.meta.env.VITE_API_URL 
+  || (import.meta.env.MODE === 'development'
+      ? 'http://localhost:5000/api'           // local dev backend
+      : 'https://everydaynewsbackend.onrender.com/api'); // Render backend
 
 // Create axios instance
 const api = axios.create({
@@ -15,7 +18,7 @@ const api = axios.create({
 // ------------------ Request interceptor (JWT) ------------------
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('deliveryToken'); // your JWT key
+    const token = localStorage.getItem('deliveryToken'); // JWT key for delivery portal
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
